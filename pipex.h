@@ -6,7 +6,7 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:43:44 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/02/21 17:47:22 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/02/23 00:50:18 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,15 @@ typedef struct t_vabse
 	char	**env;
 }			t_vabs;
 
-int			does_it_have_options(char *cmd);
+char		*cmd_is_path(char *str, char *envp);
+int			contains_slash(char *cmd);
+int			contains_quotes(char *word);
+int			is_space(char *str);
 void		free_split(char **array);
 void		handle_first_child(t_vabs *pipex);
 void		handle_second_child(t_vabs *pipex);
 int			open_fds(t_vabs *pipex);
-char		**handle_command(char *cmd);
-void		norminette_is_a_bitch(t_vabs *pipex);
-char		**handle_awk_command(char *cmd);
+char		**handle_command(char *cmd, char *envp);
 void		exec_cmd(char **cmd, char **env, char *env_path);
 
 #endif

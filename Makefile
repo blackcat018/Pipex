@@ -3,7 +3,7 @@ LIBNAME = libpipex.a
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
-files = pipex redirection handle_cmd
+files = pipex redirection handle_cmd is_cmd_a_path
 CFILES = $(files:%=%.c)
 OBJS = $(files:%=%.o)
 

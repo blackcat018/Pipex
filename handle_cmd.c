@@ -6,7 +6,7 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 18:28:04 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/02/21 17:47:30 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/02/23 01:07:16 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,6 @@ int	is_space(char *str)
 	while (str[i] && str[i] == ' ')
 		i++;
 	return (!str[i]);
-}
-
-int	contains_quotes(char *word)
-{
-	int		i;
-	char	*s;
-
-	i = 0;
-	s = word;
-	while (s[i])
-	{
-		if (s[i] == '\'')
-			return (1);
-		i++;
-	}
-	return (0);
 }
 
 char	*parce(char *word)
@@ -96,7 +80,7 @@ char	*is_script(char *str, int *i)
 	return (parced);
 }
 
-char	**handle_command(char *str)
+char	**handle_command(char *str, char *envp)
 {
 	char	**args;
 	int		i;
@@ -104,11 +88,12 @@ char	**handle_command(char *str)
 
 	if (!str || is_space(str))
 		return (ft_putstr_fd("Error: empty command\n", 2), NULL);
-	args = malloc(sizeof(char *) * 50);
+	args = malloc(sizeof(char *) * 40);
 	if (!args)
 		return (NULL);
 	i = 0;
 	j = 0;
+	str = cmd_is_path(str, envp);
 	while (str[i])
 	{
 		while (str[i] == ' ')

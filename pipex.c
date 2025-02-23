@@ -6,7 +6,7 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 18:28:04 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/02/21 17:57:53 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/02/23 02:10:13 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,24 @@ void	exec_cmd(char **cmd, char **env, char *env_path)
 		if (access(cmd_path, X_OK) == 0)
 		{
 			execve(cmd_path, cmd, env);
-			(perror("execve"), free(cmd_path));
-			free_split(real_path);
-			exit(1);
+			(perror("execve"), free(cmd_path), free_split(real_path), exit(1));
 		}
 		free(cmd_path);
 	}
 	free_split(real_path);
 	perror("Command not found");
 	exit(1);
+}
+
+void	norminette_suuuuuuuuks(t_vabs *pipex)
+{
+	close(pipex->pipe_fd[0]);
+	close(pipex->pipe_fd[1]);
+	close(pipex->infile);
+	close(pipex->outfile);
+	wait(NULL);
+	wait(NULL);
+	free(pipex->envp);
 }
 
 int	main(int ac, char **av, char **env)
@@ -95,7 +104,7 @@ int	main(int ac, char **av, char **env)
 	pipex.av = av;
 	pipex.env = env;
 	if (open_fds(&pipex) == -1)
-		return (1);
+		exit(EXIT_FAILURE);
 	pipex.envp = extract_env(pipex.env, pipex.infile, pipex.outfile);
 	if (pipe(pipex.pipe_fd) == -1)
 	{
@@ -105,6 +114,6 @@ int	main(int ac, char **av, char **env)
 	}
 	handle_first_child(&pipex);
 	handle_second_child(&pipex);
-	norminette_is_a_bitch(&pipex);
+	norminette_suuuuuuuuks(&pipex);
 	return (0);
 }

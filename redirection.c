@@ -6,21 +6,26 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:43:44 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/02/21 18:00:14 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/02/23 02:16:26 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	norminette_is_a_bitch(t_vabs *pipex)
+int	contains_quotes(char *word)
 {
-	close(pipex->pipe_fd[0]);
-	close(pipex->pipe_fd[1]);
-	close(pipex->infile);
-	close(pipex->outfile);
-	wait(NULL);
-	wait(NULL);
-	free(pipex->envp);
+	int		i;
+	char	*s;
+
+	i = 0;
+	s = word;
+	while (s[i])
+	{
+		if (s[i] == '\'')
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 int	open_fds(t_vabs *pipex)
@@ -56,7 +61,7 @@ void	handle_first_child(t_vabs *pipex)
 		close(pipex->pipe_fd[0]);
 		close(pipex->pipe_fd[1]);
 		close(pipex->infile);
-		cmd1 = handle_command(pipex->av[2]);
+		cmd1 = handle_command(pipex->av[2],pipex->envp);
 		if (!cmd1)
 		{
 			(perror("ft_split"), free(pipex->envp));
@@ -82,7 +87,7 @@ void	handle_second_child(t_vabs *pipex)
 		close(pipex->pipe_fd[1]);
 		close(pipex->pipe_fd[0]);
 		close(pipex->outfile);
-		cmd2 = handle_command(pipex->av[3]);
+		cmd2 = handle_command(pipex->av[3], pipex->envp);
 		if (!cmd2)
 		{
 			(perror("ft_split"), free(pipex->envp));
