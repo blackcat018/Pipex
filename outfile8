@@ -1,0 +1,21 @@
+total 160$
+drwxr-xr-x  20 moel-idr  candidates    680 Feb 23 19:43 .$
+drwxr-xr-x  14 moel-idr  candidates    476 Feb 23 02:18 ..$
+-rw-r--r--@  1 moel-idr  candidates   6148 Feb 23 02:17 .DS_Store$
+drwxr-xr-x   5 moel-idr  candidates    170 Jan 17 00:42 .vscode$
+-rw-r--r--   1 moel-idr  candidates    549 Feb 22 22:49 Makefile$
+-rw-r--r--   1 moel-idr  candidates   2422 Feb 23 01:07 handle_cmd.c$
+-rw-r--r--   1 moel-idr  candidates   2540 Feb 23 19:43 handle_cmd.o$
+-rwxrwxrwx   1 moel-idr  candidates   1180 Feb 21 17:49 infile$
+-rw-r--r--   1 moel-idr  candidates   2094 Feb 23 01:04 is_cmd_a_path.c$
+-rw-r--r--   1 moel-idr  candidates   1940 Feb 23 19:43 is_cmd_a_path.o$
+drwxr-xr-x  82 moel-idr  candidates   2788 Feb 23 19:43 libft$
+-rw-r--r--   1 moel-idr  candidates      0 Feb 23 19:44 outfile$
+-rw-r--r--   1 moel-idr  candidates      0 Feb 23 19:44 outfile8$
+-rwxr-xr-x   1 moel-idr  candidates  22596 Feb 23 19:43 pipex$
+-rw-r--r--   1 moel-idr  candidates   3187 Feb 23 19:44 pipex.c$
+-rw-r--r--   1 moel-idr  candidates   1658 Feb 23 17:26 pipex.h$
+-rw-r--r--   1 moel-idr  candidates   3040 Feb 23 19:43 pipex.o$
+-rw-r--r--   1 moel-idr  candidates   3692 Feb 23 19:44 redirection.c$
+-rw-r--r--   1 moel-idr  candidates   2464 Feb 23 19:43 redirection.o$
+-rw-r--r--   1 moel-idr  candidates     24 Feb 23 16:30 txt$

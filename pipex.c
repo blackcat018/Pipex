@@ -6,7 +6,7 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 18:28:04 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/02/23 02:10:13 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/02/24 02:49:08 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,37 +83,31 @@ void	exec_cmd(char **cmd, char **env, char *env_path)
 
 void	norminette_suuuuuuuuks(t_vabs *pipex)
 {
-	close(pipex->pipe_fd[0]);
-	close(pipex->pipe_fd[1]);
-	close(pipex->infile);
-	close(pipex->outfile);
-	wait(NULL);
-	wait(NULL);
-	free(pipex->envp);
+    close(pipex->pipe_fd[0]);
+    close(pipex->pipe_fd[1]);
+    close(pipex->infile);
+    close(pipex->outfile);
+    while (wait(NULL) > 0)
+        ;
+    free(pipex->envp);
 }
 
 int	main(int ac, char **av, char **env)
 {
 	t_vabs	pipex;
 
-	if (ac != 5)
+	if (ac < 5)
 	{
 		write(STDERR_FILENO, "Usage: ./pipex infile cmd1 cmd2 outfile\n", 39);
 		return (1);
 	}
 	pipex.av = av;
 	pipex.env = env;
+	pipex.ac = ac;
 	if (open_fds(&pipex) == -1)
 		exit(EXIT_FAILURE);
 	pipex.envp = extract_env(pipex.env, pipex.infile, pipex.outfile);
-	if (pipe(pipex.pipe_fd) == -1)
-	{
-		perror("pipe");
-		free(pipex.envp);
-		return (1);
-	}
-	handle_first_child(&pipex);
-	handle_second_child(&pipex);
+	execute_it(&pipex);
 	norminette_suuuuuuuuks(&pipex);
 	return (0);
 }
