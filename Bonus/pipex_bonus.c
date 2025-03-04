@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 18:28:04 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/02/27 13:51:30 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/02/26 20:57:31 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../pipex.h"
 
 void	free_split(char **array)
 {
@@ -97,6 +97,12 @@ int	main(int ac, char **av, char **env)
 	t_vabs	pipex;
 	char	*path;
 
+	if(ft_strncmp("here_doc",av[1],8) == 0)
+	{
+		if(ac < 6)
+			exit(1);
+		handle_here_doc(&pipex);
+	}
 	if (ac < 5)
 	{
 		write(STDERR_FILENO, "Usage: ./pipex infile cmd1 cmd2 outfile\n", 39);
@@ -109,7 +115,6 @@ int	main(int ac, char **av, char **env)
 		exit(EXIT_FAILURE);
 	path = extract_env(pipex.env, pipex.infile, pipex.outfile);
 	pipex.envp = add_curr_path(path, env);
-	printf("\e[1;3;4;100m%s\n\e[0m", pipex.envp);
 	execute_it(&pipex);
 	norminette_suuuuuuuuks(&pipex);
 	return (0);

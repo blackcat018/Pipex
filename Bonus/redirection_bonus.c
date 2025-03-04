@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirection.c                                      :+:      :+:    :+:   */
+/*   redirection_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:43:44 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/02/24 21:58:13 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/02/26 20:57:51 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../pipex.h"
 
 int	contains_quotes(char *word)
 {
@@ -32,18 +32,11 @@ int	open_fds(t_vabs *pipex)
 {
 	pipex->infile = open(pipex->av[1], O_RDONLY);
 	if (pipex->infile == -1)
-	{
-		perror("open infile");
-		return (-1);
-	}
+		return ((perror("open infile")), (-1));
 	pipex->outfile = open(pipex->av[pipex->ac - 1],
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (pipex->outfile == -1)
-	{
-		perror("open outfile");
-		close(pipex->infile);
-		return (-1);
-	}
+		return (perror("open outfile")), (close(pipex->infile), (-1));
 	return (0);
 }
 
