@@ -6,7 +6,7 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 18:28:04 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/02/27 13:51:30 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/03/04 15:31:25 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ int	main(int ac, char **av, char **env)
 		exit(EXIT_FAILURE);
 	path = extract_env(pipex.env, pipex.infile, pipex.outfile);
 	pipex.envp = add_curr_path(path, env);
-	printf("\e[1;3;4;100m%s\n\e[0m", pipex.envp);
 	execute_it(&pipex);
 	norminette_suuuuuuuuks(&pipex);
 	return (0);

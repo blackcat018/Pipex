@@ -6,7 +6,7 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:43:44 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/02/24 21:58:13 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:52:13 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,28 @@ void	handle_child(t_vabs *pipex, int index, int prev_pipe_fd,
 	exit(1);
 }
 
+void	closing_end(int prev_pipe_fd, int end_ac, char *envp)
+{
+	int	index;
+
+	index = 2;
+	if (prev_pipe_fd != -1)
+		close(prev_pipe_fd);
+	index = 2;
+	while (index < end_ac)
+	{
+		wait(NULL);
+		(index++);
+	}
+	free(envp);
+	exit(0);
+}
+
 void	execute_it(t_vabs *pipex)
 {
 	pid_t	pid;
 
-	int(index), (prev_pipe_fd), (next_pipe_fd[2]);
+	int (index), (prev_pipe_fd), (next_pipe_fd[2]);
 	index = 2;
 	prev_pipe_fd = -1;
 	while (index < pipex->ac - 1)
@@ -97,6 +114,5 @@ void	execute_it(t_vabs *pipex)
 			index++;
 		}
 	}
-	if (prev_pipe_fd != -1)
-		close(prev_pipe_fd);
+	closing_end(prev_pipe_fd, pipex->ac - 1, pipex->envp);
 }
