@@ -6,68 +6,35 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:43:44 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/03/04 17:52:13 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:45:07 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	contains_quotes(char *word)
-{
-	int		i;
-	char	*s;
-
-	i = 0;
-	s = word;
-	while (s[i])
-	{
-		if (s[i] == '\'')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	open_fds(t_vabs *pipex)
-{
-	pipex->infile = open(pipex->av[1], O_RDONLY);
-	if (pipex->infile == -1)
-	{
-		perror("open infile");
-		return (-1);
-	}
-	pipex->outfile = open(pipex->av[pipex->ac - 1],
-			O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (pipex->outfile == -1)
-	{
-		perror("open outfile");
-		close(pipex->infile);
-		return (-1);
-	}
-	return (0);
-}
-
 void	handle_child(t_vabs *pipex, int index, int prev_pipe_fd,
-		int next_pipe_fd)
+		int *next_pipe_fd)
 {
 	char	**cmd;
 
-	if (index == 2)
-		dup2(pipex->infile, STDIN_FILENO);
+	close(next_pipe_fd[0]);
+	if (index == 2 && pipex->infile > 0)
+		dup2(pipex->infile, 0);
 	else
-		dup2(prev_pipe_fd, STDIN_FILENO);
+		dup2(prev_pipe_fd, 0);
 	if (index == pipex->ac - 2)
-		dup2(pipex->outfile, STDOUT_FILENO);
+		dup2(pipex->outfile, 1);
 	else
-		dup2(next_pipe_fd, STDOUT_FILENO);
+		dup2(next_pipe_fd[1], 1);
 	close(prev_pipe_fd);
-	close(next_pipe_fd);
+	close(next_pipe_fd[1]);
 	close(pipex->infile);
 	close(pipex->outfile);
 	cmd = handle_command(pipex->av[index], pipex->envp);
 	if (!cmd)
-		(perror("comman failed"), free(pipex->envp), exit(1));
+		(perror("command failed"), free(pipex->envp), exit(1));
 	exec_cmd(cmd, pipex->env, pipex->envp);
+	// free(pipex->envp);
 	free_split(cmd);
 	exit(1);
 }
@@ -89,6 +56,30 @@ void	closing_end(int prev_pipe_fd, int end_ac, char *envp)
 	exit(0);
 }
 
+void	parent_proc(int *prev_pipe_fd, int next_pipe_fd[2])
+{
+	if (*prev_pipe_fd != -1)
+		close(*prev_pipe_fd);
+	close(next_pipe_fd[1]);
+	*prev_pipe_fd = next_pipe_fd[0];
+}
+
+void	closing(int prev_pipe_fd, t_vabs *pipex)
+{
+	int	index;
+
+	if (prev_pipe_fd != -1)
+		close(prev_pipe_fd);
+	index = 2;
+	while (index < pipex->ac - 1)
+	{
+		wait(NULL);
+		index++;
+	}
+	free(pipex->envp);
+	exit(0);
+}
+
 void	execute_it(t_vabs *pipex)
 {
 	pid_t	pid;
@@ -104,15 +95,16 @@ void	execute_it(t_vabs *pipex)
 		if (pid == -1)
 			(perror("fork"), free(pipex->envp), exit(1));
 		if (pid == 0)
-			handle_child(pipex, index, prev_pipe_fd, next_pipe_fd[1]);
+		{
+			if (index == 2 && pipex->infile == -1)
+				exit(1);
+			handle_child(pipex, index, prev_pipe_fd, next_pipe_fd);
+		}
 		else
 		{
-			if (prev_pipe_fd != -1)
-				close(prev_pipe_fd);
-			close(next_pipe_fd[1]);
-			prev_pipe_fd = next_pipe_fd[0];
+			parent_proc(&prev_pipe_fd, next_pipe_fd);
 			index++;
 		}
 	}
-	closing_end(prev_pipe_fd, pipex->ac - 1, pipex->envp);
+	closing(prev_pipe_fd, pipex);
 }

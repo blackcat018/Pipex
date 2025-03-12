@@ -6,27 +6,11 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 18:28:04 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/03/04 15:31:25 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/03/12 21:23:19 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-void	free_split(char **array)
-{
-	int	i;
-
-	i = 0;
-	if (array)
-	{
-		while (array[i])
-		{
-			free(array[i]);
-			i++;
-		}
-		free(array);
-	}
-}
 
 char	*extract_env(char **env, int infile, int outfile)
 {
@@ -69,6 +53,8 @@ void	exec_cmd(char **cmd, char **env, char *env_path)
 		temp = cmd_path;
 		cmd_path = ft_strjoin(cmd_path, cmd[0]);
 		free(temp);
+		if (!cmd_path)
+			(ft_putstr("command not found"), free_split(real_path), exit(1));
 		if (access(cmd_path, X_OK) == 0)
 		{
 			execve(cmd_path, cmd, env);
@@ -81,15 +67,46 @@ void	exec_cmd(char **cmd, char **env, char *env_path)
 	exit(1);
 }
 
-void	norminette_suuuuuuuuks(t_vabs *pipex)
+char	*get_current_path(char **env)
 {
-	close(pipex->pipe_fd[0]);
-	close(pipex->pipe_fd[1]);
-	close(pipex->infile);
-	close(pipex->outfile);
-	while (wait(NULL) > 0)
-		;
-	free(pipex->envp);
+	char	*temp;
+	char	**curr_path;
+	char	*result;
+	int		i;
+
+	i = 0;
+	curr_path = NULL;
+	temp = NULL;
+	while (env[i])
+	{
+		if (ft_strncmp("PWD=", env[i], 4) == 0)
+			temp = env[i];
+		i++;
+	}
+	curr_path = ft_split(temp, '=');
+	if (!curr_path)
+		return (NULL);
+	result = ft_strdup(curr_path[1]);
+	free_split(curr_path);
+	return (result);
+}
+
+char	*add_curr_path(char *envp, char **env)
+{
+	char	*curr_path;
+	char	*result;
+	char	*temp;
+
+	curr_path = get_current_path(env);
+	temp = ft_strjoin(envp, ":");
+	if (!temp)
+		return ((free(temp)), (NULL));
+	result = ft_strjoin(temp, curr_path);
+	if (!result)
+		return ((free(curr_path)), free(temp), (NULL));
+	free(curr_path);
+	free(temp);
+	return (result);
 }
 
 int	main(int ac, char **av, char **env)
@@ -99,17 +116,17 @@ int	main(int ac, char **av, char **env)
 
 	if (ac < 5)
 	{
-		write(STDERR_FILENO, "Usage: ./pipex infile cmd1 cmd2 outfile\n", 39);
+		ft_putstr_fd("Usage: ./pipex infile cmd1 cmd2 outfile\n", 1);
 		return (1);
 	}
 	pipex.av = av;
 	pipex.env = env;
 	pipex.ac = ac;
-	if (open_fds(&pipex) == -1)
-		exit(EXIT_FAILURE);
+	open_fds(&pipex);
 	path = extract_env(pipex.env, pipex.infile, pipex.outfile);
 	pipex.envp = add_curr_path(path, env);
 	execute_it(&pipex);
-	norminette_suuuuuuuuks(&pipex);
+	free(path);
+	free(pipex.envp);
 	return (0);
 }

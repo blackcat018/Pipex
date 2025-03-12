@@ -6,7 +6,7 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 18:28:04 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/02/26 20:57:16 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:41:39 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,21 @@ int	is_space(char *str)
 	while (str[i] && str[i] == ' ')
 		i++;
 	return (!str[i]);
+}
+
+void	free_split(char **strs)
+{
+	char	**temp;
+
+	if (strs == NULL)
+		return ;
+	temp = strs;
+	while (*temp)
+	{
+		free(*temp);
+		temp++;
+	}
+	free(strs);
 }
 
 char	*parce(char *word)

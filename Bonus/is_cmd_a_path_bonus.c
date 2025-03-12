@@ -6,17 +6,47 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:46:41 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/02/26 20:57:09 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:03:17 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
+int	contains_quotes(char *word)
+{
+	int		i;
+	char	*s;
+
+	i = 0;
+	s = word;
+	while (s[i])
+	{
+		if (s[i] == '\'')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+static char	*append_str(char *str, const char *append)
+{
+	char	*temp;
+
+	temp = str;
+	str = ft_strjoin(str, append);
+	if (!str)
+	{
+		free(temp);
+		return (NULL);
+	}
+	free(temp);
+	return (str);
+}
+
 char	*build_check_path(char *str)
 {
 	char	**outcome;
 	char	*check;
-	char	*temp;
 	int		i;
 	int		j;
 
@@ -30,12 +60,8 @@ char	*build_check_path(char *str)
 	i = 0;
 	while (i < j - 1)
 	{
-		temp = check;
-		check = ft_strjoin(check, "/");
-		free(temp);
-		temp = check;
-		check = ft_strjoin(check, outcome[i++]);
-		free(temp);
+		check = append_str(check, "/");
+		check = append_str(check, outcome[i++]);
 	}
 	free_split(outcome);
 	return (check);
@@ -82,41 +108,4 @@ char	*cmd_is_path(char *str, char *envp)
 		(free_split(paths)), (free(check));
 	}
 	return (str);
-}
-
-char	*get_current_path(char **env)
-{
-	char	*temp;
-	char	**curr_path;
-	int		i;
-
-	i = 0;
-	curr_path = NULL;
-	temp = NULL;
-	while (env[i])
-	{
-		if (ft_strncmp("PWD=", env[i], 4) == 0)
-			temp = env[i];
-		i++;
-	}
-	curr_path = ft_split(temp, '=');
-	if (!curr_path)
-		return (free(temp), NULL);
-	return (curr_path[1]);
-}
-
-char	*add_curr_path(char *envp, char **env)
-{
-	char	*curr_path;
-	char	*result;
-	char	*temp;
-
-	curr_path = get_current_path(env);
-	temp = ft_strjoin(envp, ":");
-	if (!temp)
-		return ((free(temp)), (NULL));
-	result = ft_strjoin(temp, curr_path);
-	if (!result)
-		return ((free(result)), (NULL));
-	return (result);
 }

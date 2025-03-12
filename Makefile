@@ -1,9 +1,8 @@
 NAME = pipex
 LIBNAME = libpipex.a
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
-
-files = pipex redirection handle_cmd is_cmd_a_path
+CFLAGS = -Wall -Wextra -Werror 
+files = pipex redirection handle_cmd is_cmd_a_path utils
 CFILES = $(files:%=%.c)
 OBJS = $(files:%=%.o)
 
@@ -11,7 +10,7 @@ bonus_files = Bonus/pipex_bonus Bonus/redirection_bonus \
               Bonus/handle_cmd_bonus Bonus/is_cmd_a_path_bonus \
               Bonus/get_next_line/get_next_line_bonus \
               Bonus/get_next_line/get_next_line_utils_bonus \
-			  Bonus/here_doc_bonus
+			  Bonus/here_doc_bonus Bonus/utils_bonus
 
 BONUS_CFILES = $(bonus_files:%=%.c)
 
