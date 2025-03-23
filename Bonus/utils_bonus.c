@@ -6,7 +6,7 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 14:29:34 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/03/11 14:44:39 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/03/15 16:27:42 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,11 @@ char	*get_current_path(char **env)
 			temp = env[i];
 		i++;
 	}
+	if (!temp)
+		return (NULL);
 	curr_path = ft_split(temp, '=');
 	if (!curr_path)
-		return (free(temp), NULL);
+		return (NULL);
 	result = ft_strdup(curr_path[1]);
 	free_split(curr_path);
 	return (result);
@@ -67,8 +69,29 @@ char	*add_curr_path(char *envp, char **env)
 		return ((free(temp)), (NULL));
 	result = ft_strjoin(temp, curr_path);
 	if (!result)
-		return ((free(result)), (NULL));
+		return ((free(curr_path)), free(temp), (NULL));
 	free(curr_path);
 	free(temp);
 	return (result);
+}
+
+char	*ft_strjoin2(char const *s1, char const *s2, char const *s3)
+{
+	char	*res;
+	int		len1;
+	int		len2;
+	int		len3;
+
+	if (!s1 || !s2 || !s3)
+		return (NULL);
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	len3 = ft_strlen(s3);
+	res = malloc((len1 + len2 + len3 + 1) * sizeof(char));
+	if (!res)
+		return (NULL);
+	ft_strlcpy(res, s1, len1 + 1);
+	ft_strlcat(res, s2, len1 + len2 + 1);
+	ft_strlcat(res, s3, len1 + len2 + len3 + 1);
+	return (res);
 }

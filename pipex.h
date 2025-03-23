@@ -6,7 +6,7 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:43:44 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/03/11 14:32:44 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/03/15 16:49:43 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,14 @@
 
 # include "Bonus/get_next_line/get_next_line_bonus.h"
 # include "libft/libft.h"
-# include <errno.h>
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
 
 typedef struct t_vabse
 {
-	int		pipe_fd[2];
 	int		infile;
 	int		outfile;
 	char	*envp;
@@ -46,6 +43,7 @@ void		execute_it(t_vabs *pipex);
 char		*add_curr_path(char *envp, char **env);
 void		handle_here_doc(t_vabs *pipex);
 void		ft_putstr(char *str);
+char		*ft_strjoin2(char const *s1, char const *s2, char const *s3);
 char		*get_current_path(char **env);
 
 #endif

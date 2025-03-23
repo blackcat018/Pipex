@@ -6,7 +6,7 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 22:46:41 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/03/12 21:52:36 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:28:24 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*build_check_path(char *str)
 	char	**outcome;
 	char	*check;
 
-	int(i), (j);
+	int (i), (j);
 	outcome = ft_split(str, '/');
 	if (!outcome)
 		return (NULL);
@@ -85,13 +85,15 @@ void	*get_the_cmd(char **str, char *check, char **paths)
 	if (!*str)
 		return (free_split(outcome), free_split(paths), free(check), NULL);
 	free_split(outcome);
-	return (0); // Success
+	return (0);
 }
 
 char	*cmd_is_path(char *str, char *envp)
 {
 	char	**paths;
 	char	*check;
+	char	**outcome;
+	int		j;
 
 	if (str[0] == '/')
 	{
@@ -103,8 +105,12 @@ char	*cmd_is_path(char *str, char *envp)
 			return (free(check), NULL);
 		if (is_valid_path(check, paths))
 		{
-			if (get_the_cmd(&str, check, paths) == NULL)
-				return (NULL);
+			outcome = ft_split(str, '/');
+			(j = 0);
+			while (outcome[j])
+				j++;
+			str = ft_strdup(outcome[j - 1]);
+			free_split(outcome);
 		}
 		(free_split(paths)), (free(check));
 	}

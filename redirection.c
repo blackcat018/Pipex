@@ -6,7 +6,7 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 20:43:44 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/03/12 16:45:07 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/03/15 16:58:26 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,26 +34,8 @@ void	handle_child(t_vabs *pipex, int index, int prev_pipe_fd,
 	if (!cmd)
 		(perror("command failed"), free(pipex->envp), exit(1));
 	exec_cmd(cmd, pipex->env, pipex->envp);
-	// free(pipex->envp);
 	free_split(cmd);
 	exit(1);
-}
-
-void	closing_end(int prev_pipe_fd, int end_ac, char *envp)
-{
-	int	index;
-
-	index = 2;
-	if (prev_pipe_fd != -1)
-		close(prev_pipe_fd);
-	index = 2;
-	while (index < end_ac)
-	{
-		wait(NULL);
-		(index++);
-	}
-	free(envp);
-	exit(0);
 }
 
 void	parent_proc(int *prev_pipe_fd, int next_pipe_fd[2])

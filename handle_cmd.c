@@ -6,21 +6,11 @@
 /*   By: moel-idr <moel-idr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 18:28:04 by moel-idr          #+#    #+#             */
-/*   Updated: 2025/03/11 14:47:24 by moel-idr         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:13:42 by moel-idr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-int	is_space(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] == ' ')
-		i++;
-	return (!str[i]);
-}
 
 void	free_split(char **strs)
 {
@@ -56,9 +46,9 @@ char	*parce(char *word)
 		{
 			new_outcome = ft_strjoin(outcome, temp[i]);
 			free(outcome);
-			outcome = new_outcome;
-			if (!outcome)
+			if (!new_outcome)
 				return (free_split(temp), NULL);
+			outcome = new_outcome;
 			i++;
 		}
 		return (free_split(temp), free(word), outcome);
@@ -66,11 +56,22 @@ char	*parce(char *word)
 	return (word);
 }
 
+static char	*returning(char *word)
+{
+	char	*parced;
+
+	if (!word)
+		return (NULL);
+	parced = parce(word);
+	if (!parced)
+		return (NULL);
+	return (parced);
+}
+
 char	*is_script(char *str, int *i)
 {
 	int		start;
 	char	*word;
-	char	*parced;
 
 	if (str[*i] == '\'')
 	{
@@ -89,18 +90,14 @@ char	*is_script(char *str, int *i)
 			(*i)++;
 		word = ft_substr(str, start, *i - start);
 	}
-	if (!word)
-		return (NULL);
-	parced = parce(word);
-	return (parced);
+	return (returning(word));
 }
 
 char	**handle_command(char *str, char *envp)
 {
 	char	**args;
-	int		i;
-	int		j;
 
+	int (i), (j);
 	if (!str || is_space(str))
 		return (ft_putstr_fd("Error: empty command\n", 2), NULL);
 	args = malloc(sizeof(char *) * 40);
@@ -120,6 +117,5 @@ char	**handle_command(char *str, char *envp)
 			return (free_split(args), NULL);
 		j++;
 	}
-	args[j] = NULL;
-	return (args);
+	return ((args[j] = NULL), (args));
 }
